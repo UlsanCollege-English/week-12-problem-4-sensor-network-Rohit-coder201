@@ -1,37 +1,40 @@
+import heapq
 
-## main.py
-```python
 def prim_mst(graph, start):
-    """
-    Build a minimum spanning tree (MST) using a Prim-style algorithm.
+    # If the graph has only one node → no edges, cost = 0
+    if start not in graph or len(graph) == 1:
+        return ([], 0)
 
-    graph: dict mapping node -> list of (neighbor, weight) pairs.
-           The graph is undirected (neighbors listed in both directions).
-    start: starting node for Prim's algorithm.
+    visited = set([start])
+    mst_edges = []
+    total_cost = 0
 
-    Return:
-        (mst_edges, total_cost)
-        - mst_edges: list of (u, v, w) edges in the MST.
-        - total_cost: sum of weights w in all MST edges.
+    # Min-heap of (weight, u, v)
+    heap = []
+    for neighbor, w in graph[start]:
+        heapq.heappush(heap, (w, start, neighbor))
 
-    You may assume:
-        - graph is connected.
-        - start exists in graph.
-    """
-    # TODO Step 1: Describe in your own words what MST means.
-    # TODO Step 2: Re-phrase this problem in a very simple sentence.
-    # TODO Step 3: Decide on data structures: visited set, edge list, mst_edges list, total_cost.
-    # TODO Step 4: Plan Prim's algorithm: how do you grow the tree from the start node?
-    # TODO Step 5: Write pseudocode for your Prim loop.
-    # TODO Step 6: Implement the code here based on your pseudocode.
-    # TODO Step 7: Test with small graphs and draw them to check the MST.
-    # TODO Step 8: Reason about the time complexity of your approach.
+    while heap and len(visited) < len(graph):
+        w, u, v = heapq.heappop(heap)
 
-    raise NotImplementedError("prim_mst is not implemented yet")
+        # Ignore edges leading to already visited nodes
+        if v in visited:
+            continue
+
+        # Add edge to MST
+        visited.add(v)
+        mst_edges.append((u, v, w))
+        total_cost += w
+
+        # Add edges from v → others
+        for nxt, w2 in graph.get(v, []):
+            if nxt not in visited:
+                heapq.heappush(heap, (w2, v, nxt))
+
+    return (mst_edges, total_cost)
 
 
 if __name__ == "__main__":
-    # Optional manual test
     sample_graph = {
         "G1": [("G2", 4), ("G3", 2)],
         "G2": [("G1", 4), ("G3", 3)],
