@@ -136,5 +136,4 @@ def test_graph_with_many_edges():
     }
     mst_edges, total_cost = prim_mst(graph, "A")
     assert len(mst_edges) == 3
-    # The minimum spanning tree here is C-D (1), A-C (1), and B-C (2) => total 4
-    assert total_cost == 1 + 1 + 2
+    assert total_cost == 4  # Correct MST cost: C-D(1), A-C(1), C-B(2)
